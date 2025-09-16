@@ -4,9 +4,7 @@ const app = require('./index');
 describe('Health Check Endpoints', () => {
   describe('GET /health', () => {
     it('should return health status with basic information', async () => {
-      const response = await request(app)
-        .get('/health')
-        .expect(200);
+      const response = await request(app).get('/health').expect(200);
 
       expect(response.body).toHaveProperty('status', 'healthy');
       expect(response.body).toHaveProperty('timestamp');
@@ -20,9 +18,7 @@ describe('Health Check Endpoints', () => {
     });
 
     it('should return valid memory information', async () => {
-      const response = await request(app)
-        .get('/health')
-        .expect(200);
+      const response = await request(app).get('/health').expect(200);
 
       expect(response.body.memory).toHaveProperty('used');
       expect(response.body.memory).toHaveProperty('total');
@@ -35,9 +31,7 @@ describe('Health Check Endpoints', () => {
 
   describe('GET /health/detailed', () => {
     it('should return detailed health status with dependencies', async () => {
-      const response = await request(app)
-        .get('/health/detailed')
-        .expect(200);
+      const response = await request(app).get('/health/detailed').expect(200);
 
       expect(response.body).toHaveProperty('status');
       expect(response.body).toHaveProperty('timestamp');
@@ -47,15 +41,13 @@ describe('Health Check Endpoints', () => {
     });
 
     it('should include dependency status checks', async () => {
-      const response = await request(app)
-        .get('/health/detailed')
-        .expect(200);
+      const response = await request(app).get('/health/detailed').expect(200);
 
       expect(response.body.dependencies).toHaveProperty('database');
       expect(response.body.dependencies).toHaveProperty('cache');
       expect(response.body.dependencies).toHaveProperty('externalApi');
 
-      Object.values(response.body.dependencies).forEach(dependency => {
+      Object.values(response.body.dependencies).forEach((dependency) => {
         expect(dependency).toHaveProperty('status');
         expect(dependency).toHaveProperty('responseTime');
       });
