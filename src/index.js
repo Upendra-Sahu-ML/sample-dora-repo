@@ -7,7 +7,7 @@ const PORT = process.env.PORT || 3000;
 
 // Middleware
 app.use(cors());
-app.use(express.json());
+app.use(express.json({ limit: '10mb' }));
 
 // Enhanced health check endpoint for monitoring
 app.get('/health', (req, res) => {
@@ -89,7 +89,15 @@ app.post('/api/process', (req, res) => {
 });
 
 // Error handling middleware
-app.use((err, req, res, next) => {
+app.use((err, req, res, _next) => {
+  // Handle JSON parsing errors
+  if (err instanceof SyntaxError && err.status === 400 && 'body' in err) {
+    return res.status(400).json({
+      error: 'Invalid JSON format',
+      message: 'Please check your request body'
+    });
+  }
+
   console.error(err.stack);
   res.status(500).json({
     error: 'Something went wrong!',
@@ -105,11 +113,13 @@ app.use('*', (req, res) => {
   });
 });
 
-// Start server
-app.listen(PORT, () => {
-  console.log(`🚀 DevLake Demo Server running on port ${PORT}`);
-  console.log(`📊 Health check: http://localhost:${PORT}/health`);
-  console.log(`📈 Metrics: http://localhost:${PORT}/api/metrics`);
-});
+// Start server only if this file is run directly (not required)
+if (require.main === module) {
+  app.listen(PORT, () => {
+    console.log(`🚀 DevLake Demo Server running on port ${PORT}`);
+    console.log(`📊 Health check: http://localhost:${PORT}/health`);
+    console.log(`📈 Metrics: http://localhost:${PORT}/api/metrics`);
+  });
+}
 
 module.exports = app;
