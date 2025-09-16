@@ -64,6 +64,19 @@ describe('DevLake Demo API', () => {
     });
   });
 
+  describe('Error handling', () => {
+    it('should handle invalid JSON requests', async () => {
+      const response = await request(app)
+        .post('/api/process')
+        .set('Content-Type', 'application/json')
+        .send('invalid json')
+        .expect(400);
+
+      expect(response.body).toHaveProperty('error', 'Invalid JSON format');
+      expect(response.body).toHaveProperty('message', 'Please check your request body');
+    });
+  });
+
   describe('404 handler', () => {
     it('should return 404 for unknown routes', async () => {
       const response = await request(app)
