@@ -94,7 +94,6 @@ jobs:
       run: npm run coverage:check
 
     - name: Upload coverage to Codacy
-      if: success() && secrets.CODACY_PROJECT_TOKEN != ''
       continue-on-error: true
       uses: codacy/codacy-coverage-reporter-action@v1
       with:
