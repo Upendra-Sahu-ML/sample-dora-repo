@@ -92,10 +92,3 @@ jobs:
 
     - name: Check coverage threshold
       run: npm run coverage:check
-
-    - name: Upload coverage to Codacy
-      if: success()
-      uses: codacy/codacy-coverage-reporter-action@v1
-      with:
-        project-token: ${{ secrets.CODACY_PROJECT_TOKEN }}
-        coverage-reports: coverage/lcov.info
